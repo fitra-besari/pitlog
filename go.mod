@@ -1,4 +1,4 @@
-module pitlog
+module github.com/fitra-besari/pitlog
 
 go 1.23.1
 
