@@ -3,13 +3,15 @@ package pitlog_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"pitlog"
+
+	"github.com/fitra-besari/pitlog"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
 	"testing"
 )
 
