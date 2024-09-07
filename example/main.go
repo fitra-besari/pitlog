@@ -17,16 +17,17 @@ func main() {
 	appVersion := "1.0.0"
 	appLevel := "development"
 	logDir := "./logs"
-	enableLogConsole := "true"
-	useSeparate := "false"
-	objectView := "false"
+	enableLogConsole := "1" // "0"  for enable log on conslosso ,default  will be outo enable on log file only
+	useSeparate := "1"      // "0" if use 1 you can ssee separate border on every request
+	objectView := "false"   // "0" if use 1 you can see log data on object json if use 0 you can see on string data
 
+	//  Create instance
 	logger, err := pitlog.New_pitlog(appName, appVersion, appLevel, logDir, enableLogConsole, useSeparate, objectView)
 	if err != nil {
 		e.Logger.Fatal("Failed to initialize logging: ", err)
 	}
 
-	// Middleware logging
+	// Register Middleware logging
 	logger.Api_log_middleware(e, []string{"Authorization", "password"})
 
 	// Endpoint /ping
