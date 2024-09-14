@@ -245,7 +245,7 @@ func (DI *Pitlog_base) create_api_loger(logModel Log_model, is_response bool) st
 
 	if DI.use_sparate {
 		sparate_start = fmt.Sprintf("%s%s %s Information Start %s", DI.indentation, border, logModel.Mode, border)
-		sparate_end = fmt.Sprintf("%s%s %s Information End %s", DI.indentation, border, logModel.Mode, border)
+		sparate_end = fmt.Sprintf("%s%s %s Information End %s%s", DI.indentation, border, logModel.Mode, border, DI.indentation)
 	}
 
 	indentation := fmt.Sprintf("\n%s", DI.indentation)
@@ -408,25 +408,37 @@ func (DI *Pitlog_base) func_create_message_object(request_id string, status int,
 	obj.Title = title
 	obj.Message = message
 	obj.Date = log_time
+
+	switch status {
+	case 2:
+		obj.Status = name_type_status_debug
+		break
+	case 3:
+		obj.Status = name_type_status_error
+		break
+	default:
+		DI.dedicated.Info(message_string)
+	}
+
 	jsonData, _ := json.Marshal(obj)
 	jsonString := string(jsonData)
 	if is_object {
 		jsonString = strings.ReplaceAll(jsonString, "\\", "")
 	}
 
-	message_string = fmt.Sprintf("%s%s", DI.indentation, jsonString)
+	message_string = fmt.Sprintf("%s%s%s", DI.indentation, jsonString, DI.indentation)
 	switch status {
 	case 1:
-		DI.dedicated.Info(message_string)
+		DI.dedicated.Infoln(message_string)
 		break
 	case 2:
-		DI.dedicated.Debug(message_string)
+		DI.dedicated.Warnln(message_string)
 		break
 	case 3:
-		DI.dedicated.Error(message_string)
+		DI.dedicated.Errorln(message_string)
 		break
 	default:
-		DI.dedicated.Info(message_string)
+		DI.dedicated.Infoln(message_string)
 	}
 }
 
