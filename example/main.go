@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/fitra-besari/pitlog"
+	pitlog "github.com/fitra-besari/pitlog"
 	"github.com/labstack/echo/v4"
 )
 

@@ -45,7 +45,7 @@ type IN_pitlog_base interface {
 	Make_log_object(request_id string, status int, title string, object interface{})
 }
 
-func New_pitlog(app_name, app_version, app_level, log_dir, enable_log_console, use_separate, object_view string) (IN_pitlog_base, error) {
+func New_pitlog(app_name, app_version, app_level, log_dir, enable_log_console, use_separate string) (IN_pitlog_base, error) {
 	var err error
 	dedicated_log := logrus.New()
 	dedicated_log.SetLevel(logrus.InfoLevel)
@@ -66,20 +66,18 @@ func New_pitlog(app_name, app_version, app_level, log_dir, enable_log_console, u
 
 	enable_log_console_bool, _ := strconv.ParseBool(enable_log_console)
 	use_separate_bool, _ := strconv.ParseBool(use_separate)
-	object_view_bool, _ := strconv.ParseBool(object_view)
 	return &Pitlog_base{
-		log_title_default,
-		dedicated_log,
-		log_file_name_default,
-		log_dir,
-		file,
-		app_name,
-		app_version,
-		app_level,
-		indentation,
-		enable_log_console_bool,
-		object_view_bool,
-		use_separate_bool,
+		log_title:          log_title_default,
+		dedicated:          dedicated_log,
+		log_file_name:      log_file_name_default,
+		log_directory:      log_dir,
+		file:               file,
+		app_name:           app_name,
+		app_version:        app_version,
+		app_level:          app_level,
+		indentation:        indentation,
+		enable_log_console: enable_log_console_bool,
+		use_sparate:        use_separate_bool,
 	}, err
 }
 
@@ -443,14 +441,11 @@ func (DI *Pitlog_base) func_create_message_object(request_id string, status int,
 }
 
 func (DI *Pitlog_base) Make_log_string(request_id string, status int, title string, message string) {
-	switch DI.object_view {
-	case true:
-		DI.func_create_message_object(request_id, status, title, message, false)
-		break
-	default:
-		DI.func_create_message_string(request_id, status, title, message)
-		break
-	}
+	DI.func_create_message_string(request_id, status, title, message)
+}
+
+func (DI *Pitlog_base) Make_log_string_from_object(request_id string, status int, title string, message string) {
+	DI.func_create_message_object(request_id, status, title, message, false)
 }
 
 func (DI *Pitlog_base) Make_log_object(request_id string, status int, title string, object interface{}) {
@@ -459,13 +454,16 @@ func (DI *Pitlog_base) Make_log_object(request_id string, status int, title stri
 		json_data, _ := json.Marshal(object)
 		data_string = string(json_data)
 	}
-	switch DI.object_view {
-	case true:
-		DI.func_create_message_object(request_id, status, title, data_string, true)
-		break
-	default:
-		DI.func_create_message_string(request_id, status, title, data_string)
-		break
+	DI.func_create_message_object(request_id, status, title, data_string, true)
+
+}
+
+func (DI *Pitlog_base) Make_log_object_from_string(request_id string, status int, title string, object interface{}) {
+	var data_string string
+	if object != nil {
+		json_data, _ := json.Marshal(object)
+		data_string = string(json_data)
 	}
 
+	DI.func_create_message_string(request_id, status, title, data_string)
 }
