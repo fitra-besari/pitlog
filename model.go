@@ -1,9 +1,10 @@
 package pitlog
 
 import (
-	"github.com/sirupsen/logrus"
 	"os"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Pitlog_base struct {
@@ -17,7 +18,6 @@ type Pitlog_base struct {
 	app_level          string
 	indentation        string
 	enable_log_console bool
-	object_view        bool
 	use_sparate        bool
 }
 
