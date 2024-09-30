@@ -42,7 +42,9 @@ func (f *custom_string_formatter) Format(entry *logrus.Entry) ([]byte, error) {
 type IN_pitlog_base interface {
 	Api_log_middleware(ech *echo.Echo, sensitive []string)
 	Make_log_string(request_id string, status int, title string, message string)
+	Make_log_string_from_object(request_id string, status int, title string, message string)
 	Make_log_object(request_id string, status int, title string, object interface{})
+	Make_log_object_from_string(request_id string, status int, title string, object interface{})
 }
 
 func New_pitlog(app_name, app_version, app_level, log_dir, enable_log_console, use_separate string) (IN_pitlog_base, error) {
