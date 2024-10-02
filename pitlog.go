@@ -392,19 +392,19 @@ func (DI *Pitlog_base) func_create_message_string(request_id string, status int,
 
 	switch status {
 	case 1:
-		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s x=> %s ", DI.indentation, name_type_status_info, request_id, title, message, log_time)
+		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s x=> %s\n", DI.indentation, name_type_status_info, request_id, title, message, log_time)
 		DI.dedicated.Info(message_string)
 		break
 	case 2:
-		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s", DI.indentation, name_type_status_debug, request_id, title, message)
+		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s\n", DI.indentation, name_type_status_debug, request_id, title, message)
 		DI.dedicated.Debug(message_string)
 		break
 	case 3:
-		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s", DI.indentation, name_type_status_error, request_id, title, message)
+		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s\n", DI.indentation, name_type_status_error, request_id, title, message)
 		DI.dedicated.Error(message_string)
 		break
 	default:
-		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s", DI.indentation, name_type_status_error, request_id, title, message)
+		message_string = fmt.Sprintf("%s%s request_id - %s - %s -=> %s\n", DI.indentation, name_type_status_error, request_id, title, message)
 		DI.dedicated.Info(message_string)
 	}
 }
