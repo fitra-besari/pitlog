@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"mime/multipart"
 	"net/url"
@@ -47,36 +48,45 @@ type IN_pitlog_base interface {
 	Make_log_object_to_string(request_id string, status int, title string, object interface{})
 }
 
-func New_pitlog(app_name, app_version, app_level, log_dir, enable_log_console, use_separate string) (IN_pitlog_base, error) {
+func New_pitlog(payload Pitlog_payload) (IN_pitlog_base, error) {
 	var err error
 	dedicated_log := logrus.New()
 	dedicated_log.SetLevel(logrus.InfoLevel)
 	dedicated_log.SetFormatter(&custom_string_formatter{})
 
 	log_title_default := "pitlog.go"
-	log_file_name_default, _ := get_log_file_name(app_name, log_dir)
+	log_file_name_default, _ := get_log_file_name(payload.App_name, payload.Log_dir)
 
 	var file *os.File
 	if file, err = os.OpenFile(log_file_name_default, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err != nil {
 		return nil, err
 	}
 
+	enable_log_console_bool, _ := strconv.ParseBool(payload.Enable_log_console)
+	switch enable_log_console_bool {
+	case true:
+		dedicated_log.SetOutput(io.MultiWriter(file, os.Stdout))
+		break
+	default:
+		dedicated_log.SetOutput(file)
+	}
+
+	use_separate_bool, _ := strconv.ParseBool(payload.Use_separate)
+
 	indentation := "\n"
-	if app_level == name_app_level_development {
+	if payload.App_level == name_app_level_development {
 		indentation = "\n\n"
 	}
 
-	enable_log_console_bool, _ := strconv.ParseBool(enable_log_console)
-	use_separate_bool, _ := strconv.ParseBool(use_separate)
 	return &Pitlog_base{
 		log_title:          log_title_default,
 		dedicated:          dedicated_log,
 		log_file_name:      log_file_name_default,
-		log_directory:      log_dir,
+		log_directory:      payload.Log_dir,
 		file:               file,
-		app_name:           app_name,
-		app_version:        app_version,
-		app_level:          app_level,
+		app_name:           payload.App_name,
+		app_version:        payload.App_version,
+		app_level:          payload.App_level,
 		indentation:        indentation,
 		enable_log_console: enable_log_console_bool,
 		use_sparate:        use_separate_bool,

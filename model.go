@@ -7,6 +7,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type Pitlog_payload struct {
+	App_name           string
+	App_version        string
+	App_level          string
+	Log_dir            string
+	Enable_log_console string
+	Use_separate       string
+}
+
 type Pitlog_base struct {
 	log_title          string
 	dedicated          *logrus.Logger
